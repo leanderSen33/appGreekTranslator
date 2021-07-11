@@ -3,9 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:greekfix/logic/changeNotifier.dart';
+import 'package:greekfix/utils/greekFixIcons.dart';
 import 'package:provider/provider.dart';
 
 class ButtonVisualizeColors extends StatelessWidget {
+  final double spread;
+  final double opacity;
+  ButtonVisualizeColors(this.spread, this.opacity);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -18,13 +23,13 @@ class ButtonVisualizeColors extends StatelessWidget {
         height: 50,
         width: 50,
         depth: 35,
-        spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).visualizeButtonOn,
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Image.asset(
-            'assets/Images/${Provider.of<Data>(context, listen: false).visualizeIconStatus}.png',
-          ),
+        spread: spread,
+        emboss:
+            Provider.of<Data>(context, listen: false).visualizeButtonIsPushed,
+        child: Icon(
+          GreekFixIcons.visualizeicon,
+          color: Colors.blue.withOpacity(opacity),
+          size: 37,
         ),
       ),
     );
@@ -32,28 +37,29 @@ class ButtonVisualizeColors extends StatelessWidget {
 }
 
 class ButtonPaste extends StatelessWidget {
-  final AnimationController animationStuff;
-  ButtonPaste(this.animationStuff);
+  final AnimationController animationController;
+  ButtonPaste(this.animationController);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Provider.of<Data>(context, listen: false).clipboardPasteText();
-        if (animationStuff.isCompleted) {
-          animationStuff.reverse();
+        if (animationController.isCompleted) {
+          animationController.reverse();
         } else {
-          animationStuff.forward();
+          animationController.forward();
         }
       },
       child: ClayContainer(
         color: Color(0XFFD4D7D9),
+        //surfaceColor: Colors.orangeAccent,
         borderRadius: 17,
         height: 50,
         width: 50,
         depth: 35,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).pasteButtonOn,
+        emboss: Provider.of<Data>(context, listen: false).pasteButtonIsPushed,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Image.asset(
@@ -79,7 +85,7 @@ class ButtonDelete extends StatelessWidget {
         width: 50,
         depth: 35,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).deleteButtonOn,
+        emboss: Provider.of<Data>(context, listen: false).deleteButtonIsPushed,
         child: Padding(
           padding: const EdgeInsets.all(1.0),
           child: Image.asset(
@@ -105,7 +111,7 @@ class ButtonFixText extends StatelessWidget {
         width: 50,
         depth: 35,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).fixButtonOn,
+        emboss: Provider.of<Data>(context, listen: false).fixButtonIsPushed,
         child: Padding(
           padding: const EdgeInsets.all(7.0),
           child: Image.asset(
@@ -118,6 +124,10 @@ class ButtonFixText extends StatelessWidget {
 }
 
 class ButtonSwitchCase extends StatelessWidget {
+  //use this to make the button contour disappear.
+  // final int depth;
+  // ButtonSwitchCase(this.depth);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -131,7 +141,8 @@ class ButtonSwitchCase extends StatelessWidget {
         width: 50,
         depth: 35,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).switchCaseButtonOn,
+        emboss:
+            Provider.of<Data>(context, listen: false).switchCaseButtonIsPushed,
         child: Padding(
           padding: const EdgeInsets.all(9.0),
           child: Image.asset(
@@ -169,7 +180,7 @@ class ButtonCopy extends StatelessWidget {
         width: 50,
         depth: 35,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).copyButtonOn,
+        emboss: Provider.of<Data>(context, listen: false).copyButtonIsPushed,
         child: Padding(
           padding: const EdgeInsets.all(11.0),
           child: Image.asset(
@@ -195,7 +206,8 @@ class ButtonTranslate extends StatelessWidget {
         width: 50,
         depth: 35,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).translateButtonOn,
+        emboss:
+            Provider.of<Data>(context, listen: false).translateButtonIsPushed,
         child: Padding(
           padding: const EdgeInsets.all(9.0),
           child: Image.asset(
@@ -221,7 +233,7 @@ class ButtonRefresh extends StatelessWidget {
         width: 50,
         depth: 35,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).returnButtonOn,
+        emboss: Provider.of<Data>(context, listen: false).returnButtonIsPushed,
         child: Padding(
           padding: const EdgeInsets.all(11.0),
           child: Image.asset(
@@ -232,3 +244,41 @@ class ButtonRefresh extends StatelessWidget {
     );
   }
 }
+
+// class ButtonVisualizeColors extends StatelessWidget {
+//   final double spread;
+//   final double opacity;
+//   ButtonVisualizeColors(this.spread, this.opacity);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: () {
+//         Provider.of<Data>(context, listen: false).visualizeButton();
+//       },
+//       child: ClayContainer(
+//         color: Color(0XFFD4D7D9),
+//         borderRadius: 17,
+//         height: 50,
+//         width: 50,
+//         depth: 35,
+//         spread: spread,
+//         emboss:
+//         Provider.of<Data>(context, listen: false).visualizeButtonIsPushed,
+//         child: IgnorePointer(
+//           child: Container(
+//             constraints: BoxConstraints(maxHeight: 30, maxWidth: 37),
+//             decoration: BoxDecoration(
+//               image: DecorationImage(
+//                   colorFilter: ColorFilter.mode(
+//                       Color(0XFFD4D7D9).withOpacity(opacity),
+//                       BlendMode.dstATop),
+//                   image: AssetImage(
+//                       'assets/Images/${Provider.of<Data>(context, listen: false).visualizeIconStatus}.png')),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -14,30 +14,30 @@ class Data with ChangeNotifier {
   bool switchText = false;
   bool pageSnappingChange = true;
 
-  bool getStartedButtonOn = false;
+  bool getStartedButtonIsPushed = false;
 
-  bool pasteButtonOn = false;
+  bool pasteButtonIsPushed = false;
   String pasteIconStatus = 'pasteIcon';
 
-  bool visualizeButtonOn = false;
+  bool visualizeButtonIsPushed = false;
   String visualizeIconStatus = 'eyeOff';
 
-  bool deleteButtonOn = false;
+  bool deleteButtonIsPushed = false;
   String deleteIconStatus = 'deleteOff';
 
-  bool switchCaseButtonOn = false;
+  bool switchCaseButtonIsPushed = false;
   String switchCaseIconStatus = 'caseOff';
 
-  bool fixButtonOn = false;
+  bool fixButtonIsPushed = false;
   String fixIconStatus = 'fixOff';
 
-  bool copyButtonOn = false;
+  bool copyButtonIsPushed = false;
   String copyIconStatus = 'copyOff';
 
-  bool translateButtonOn = false;
+  bool translateButtonIsPushed = false;
   String translateIconStatus = 'translateOff';
 
-  bool returnButtonOn = false;
+  bool returnButtonIsPushed = false;
   String returnIconStatus = 'returnOff';
 
   var brainCorrector = BrainWordCorrector();
@@ -52,8 +52,8 @@ class Data with ChangeNotifier {
   void clipboardPasteText() async {
     final value = await FlutterClipboard.paste();
     controllerText1.text = value;
-    pasteButtonOn = !pasteButtonOn;
-    pasteButtonOn
+    pasteButtonIsPushed = !pasteButtonIsPushed;
+    pasteButtonIsPushed
         ? pasteIconStatus = 'pasteOff'
         : pasteIconStatus = 'pasteIcon';
 
@@ -62,8 +62,8 @@ class Data with ChangeNotifier {
 
   void deleteButtonDynamic(
       String imageNameOn, String imageNameOff, bool buttonStatus) {
-    deleteButtonOn = !deleteButtonOn;
-    deleteButtonOn
+    deleteButtonIsPushed = !deleteButtonIsPushed;
+    deleteButtonIsPushed
         ? deleteIconStatus = imageNameOn
         : deleteIconStatus = imageNameOff;
   }
@@ -71,12 +71,12 @@ class Data with ChangeNotifier {
   void clipboardDeleteText() {
     controllerText1.clear();
 
-    deleteButtonDynamic('deleteIcon', 'deleteOff', deleteButtonOn);
-    pasteButtonOn = false;
+    deleteButtonDynamic('deleteIcon', 'deleteOff', deleteButtonIsPushed);
+    pasteButtonIsPushed = false;
     pasteIconStatus = 'pasteOff';
 
-    if (visualizeButtonOn == true) {
-      visualizeButtonOn = false;
+    if (visualizeButtonIsPushed == true) {
+      visualizeButtonIsPushed = false;
       visualizeIconStatus = 'eyeOff';
     }
 
@@ -87,7 +87,7 @@ class Data with ChangeNotifier {
 
     Duration oneSecond = Duration(seconds: 1);
     Future.delayed(oneSecond, () {
-      deleteButtonOn = false;
+      deleteButtonIsPushed = false;
       deleteIconStatus = 'deleteOff';
       notifyListeners(); // if we don't notify listeners here, after the 1 second, nothing will happen until another button is pressed.
     });
@@ -96,9 +96,8 @@ class Data with ChangeNotifier {
   }
 
   void visualizeButton() {
-    print('Controller 1 Pre: ${controllerText1.text}');
-    visualizeButtonOn = !visualizeButtonOn;
-    visualizeButtonOn
+    visualizeButtonIsPushed = !visualizeButtonIsPushed;
+    visualizeButtonIsPushed
         ? visualizeIconStatus = 'eyeIcon'
         : visualizeIconStatus = 'eyeOff';
     smsCorrected = brainCorrector.wordCorrector(controllerText1.text);
@@ -107,8 +106,8 @@ class Data with ChangeNotifier {
   }
 
   void switchCaseButton() {
-    switchCaseButtonOn = !switchCaseButtonOn;
-    switchCaseButtonOn
+    switchCaseButtonIsPushed = !switchCaseButtonIsPushed;
+    switchCaseButtonIsPushed
         ? switchCaseIconStatus = 'caseIcon'
         : switchCaseIconStatus = 'caseOff';
     switchText = !switchText;
@@ -123,8 +122,8 @@ class Data with ChangeNotifier {
   }
 
   void fixButton() async {
-    fixButtonOn = !fixButtonOn;
-    fixButtonOn ? fixIconStatus = 'fixIcon' : fixIconStatus = 'fixOff';
+    fixButtonIsPushed = !fixButtonIsPushed;
+    fixButtonIsPushed ? fixIconStatus = 'fixIcon' : fixIconStatus = 'fixOff';
     controllerText2.text = smsCorrected;
     print('FIXED MESSAGE: ${controllerText2.text}');
     input = smsCorrected;
@@ -136,14 +135,16 @@ class Data with ChangeNotifier {
   }
 
   void clipboardCopyText() async {
-    copyButtonOn = !copyButtonOn;
-    copyButtonOn ? copyIconStatus = 'copyIcon' : copyIconStatus = 'copyOff';
+    copyButtonIsPushed = !copyButtonIsPushed;
+    copyButtonIsPushed
+        ? copyIconStatus = 'copyIcon'
+        : copyIconStatus = 'copyOff';
 
     await FlutterClipboard.copy(controllerText2.text);
 
     Duration oneSecond = Duration(seconds: 1);
     Future.delayed(oneSecond, () {
-      copyButtonOn = false;
+      copyButtonIsPushed = false;
       copyIconStatus = 'copyOff';
       notifyListeners();
     });
@@ -154,8 +155,8 @@ class Data with ChangeNotifier {
   }
 
   void translateButtonDynamic() {
-    translateButtonOn = !translateButtonOn;
-    translateButtonOn
+    translateButtonIsPushed = !translateButtonIsPushed;
+    translateButtonIsPushed
         ? translateIconStatus = 'translateIcon'
         : translateIconStatus = 'translateOff';
     notifyListeners();
@@ -177,24 +178,24 @@ class Data with ChangeNotifier {
   }
 
   void refreshButton() {
-    returnButtonOn = !returnButtonOn;
-    returnButtonOn
+    returnButtonIsPushed = !returnButtonIsPushed;
+    returnButtonIsPushed
         ? returnIconStatus = 'returnIcon'
         : returnIconStatus = 'returnOff';
 
-    pasteButtonOn = false;
+    pasteButtonIsPushed = false;
     pasteIconStatus = 'pasteIcon';
-    visualizeButtonOn = false;
+    visualizeButtonIsPushed = false;
     visualizeIconStatus = 'eyeOff';
-    deleteButtonOn = false;
+    deleteButtonIsPushed = false;
     deleteIconStatus = 'deleteOff';
-    switchCaseButtonOn = false;
+    switchCaseButtonIsPushed = false;
     switchCaseIconStatus = 'caseOff';
-    fixButtonOn = false;
+    fixButtonIsPushed = false;
     fixIconStatus = 'fixOff';
-    copyButtonOn = false;
+    copyButtonIsPushed = false;
     copyIconStatus = 'copyOff';
-    translateButtonOn = false;
+    translateButtonIsPushed = false;
     translateIconStatus = 'translateOff';
 
     smsCorrected = '';
@@ -211,7 +212,7 @@ class Data with ChangeNotifier {
 
     Duration oneSecond = Duration(seconds: 1);
     Future.delayed(oneSecond, () {
-      returnButtonOn = false;
+      returnButtonIsPushed = false;
       returnIconStatus = 'returnOff';
       notifyListeners();
     });
@@ -220,12 +221,12 @@ class Data with ChangeNotifier {
   }
 
   void pressGetStarted() {
-    getStartedButtonOn = true;
+    getStartedButtonIsPushed = true;
     notifyListeners();
 
     Duration oneSecond = Duration(seconds: 2);
     Future.delayed(oneSecond, () {
-      getStartedButtonOn = false;
+      getStartedButtonIsPushed = false;
       notifyListeners();
     });
   }

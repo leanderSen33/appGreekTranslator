@@ -21,23 +21,42 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen>
-    with SingleTickerProviderStateMixin {
-  double getRadiansFromDegree(double degree) {
-    double unitRadian = 57.295779513;
-    return degree / unitRadian;
-  }
+    with TickerProviderStateMixin {
+  // double getRadiansFromDegree(double degree) {
+  //   double unitRadian = 57.295779513;
+  //   return degree / unitRadian;
+  // }
 
   late Animation degOneTranslationAnimation;
-  late AnimationController animationController;
+  late AnimationController controller;
+  late AnimationController controller2;
 
   @override
   void initState() {
-    animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 170));
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 3),
+      upperBound: 4.0,
+    );
+
+    controller2 = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 3),
+      upperBound: 1.0,
+    );
+
+    controller.forward();
+    controller2.forward();
+
     degOneTranslationAnimation =
-        Tween(begin: 0.0, end: 1.0).animate(animationController);
+        Tween(begin: 0.0, end: 1.0).animate(controller);
     super.initState();
-    animationController.addListener(() {
+
+    controller.addListener(() {
+      setState(() {});
+    });
+
+    controller2.addListener(() {
       setState(() {});
     });
   }
@@ -51,7 +70,12 @@ class _FirstScreenState extends State<FirstScreen>
             padding: const EdgeInsets.only(left: 30),
             child: Row(
               children: layoutFirstScreenLandscape(
-                  widget.boxSide, widget.orientation),
+                  boxSide: widget.boxSide,
+                  orientation: widget.orientation,
+                  degAnimation: degOneTranslationAnimation,
+                  // getRadiansFromDegree: getRadiansFromDegree,
+                  animation: controller,
+                  animation2: controller2),
             ),
           );
         else {
@@ -61,8 +85,9 @@ class _FirstScreenState extends State<FirstScreen>
                 boxSide: widget.boxSide,
                 orientation: widget.orientation,
                 degAnimation: degOneTranslationAnimation,
-                getRadiansFromDegree: getRadiansFromDegree,
-                animationStuff: animationController),
+                // getRadiansFromDegree: getRadiansFromDegree,
+                animation2: controller2,
+                animation: controller),
           );
         }
       },
@@ -75,7 +100,8 @@ List<Widget> layoutFirstScreenPortrait(
     orientation,
     degAnimation,
     getRadiansFromDegree,
-    animationStuff}) {
+    animation,
+    animation2}) {
   return [
     Expanded(
       child: SizedBox(height: 40),
@@ -88,28 +114,21 @@ List<Widget> layoutFirstScreenPortrait(
       flex: 2,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Stack(
-          alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // IgnorePointer is the solution for the non responding buttons.
-            IgnorePointer(
-              child: Container(
-                color: Colors.transparent,
-                height: 150.0,
-                width: 200.0,
-              ),
+            ButtonVisualizeColors(animation.value, animation2.value),
+            SizedBox(
+              height: 10,
+              width: 20,
             ),
-            Transform.translate(
-              offset: Offset.fromDirection(
-                  getRadiansFromDegree(180.0), degAnimation.value * 80),
-              child: ButtonVisualizeColors(),
+            ButtonPaste(animation),
+            SizedBox(
+              height: 10,
+              width: 20,
             ),
-            Transform.translate(
-              offset: Offset.fromDirection(
-                  getRadiansFromDegree(0.0), degAnimation.value * 80),
-              child: ButtonDelete(),
-            ),
-            ButtonPaste(animationStuff),
+            ButtonDelete(),
           ],
         ),
       ),
@@ -138,7 +157,13 @@ List<Widget> layoutFirstScreenPortrait(
   ];
 }
 
-List<Widget> layoutFirstScreenLandscape(boxSide, orientation) {
+List<Widget> layoutFirstScreenLandscape(
+    {boxSide,
+    orientation,
+    degAnimation,
+    getRadiansFromDegree,
+    animation,
+    animation2}) {
   return [
     //SizedBox(width: 10),
     SizedBox(width: 17),
@@ -151,11 +176,11 @@ List<Widget> layoutFirstScreenLandscape(boxSide, orientation) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          //ButtonPaste(),
+          ButtonPaste(animation),
           SizedBox(
             height: 40,
           ),
-          ButtonVisualizeColors(),
+          ButtonVisualizeColors(animation.value, animation2.value),
           SizedBox(
             height: 40,
           ),

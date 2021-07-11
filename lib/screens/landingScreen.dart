@@ -102,7 +102,7 @@ class LandingScreen extends StatelessWidget {
                     width: 260,
                     depth: 60,
                     spread: 8,
-                    emboss: Provider.of<Data>(context).getStartedButtonOn,
+                    emboss: Provider.of<Data>(context).getStartedButtonIsPushed,
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
