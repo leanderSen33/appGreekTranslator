@@ -14,7 +14,7 @@ class ColorLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClayContainer(
-      color: Color(0XFFD4D7D9),
+      color: Color(0XFF2F3A3E),
       width: boxSideConfig.boxSideWidthLogic(orientation, boxSide),
       height: boxSideConfig.boxSideHeightLogic(orientation, boxSide),
       borderRadius: 30,

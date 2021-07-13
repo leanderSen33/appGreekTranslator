@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:greekfix/logic/changeNotifier.dart';
 import 'package:greekfix/utils/greekFixIcons.dart';
 import 'package:provider/provider.dart';
+import 'package:greekfix/utils/constants.dart';
 
 class ButtonVisualizeColors extends StatelessWidget {
   final double spread;
@@ -18,7 +19,7 @@ class ButtonVisualizeColors extends StatelessWidget {
         Provider.of<Data>(context, listen: false).visualizeButton();
       },
       child: ClayContainer(
-        color: Color(0XFFD4D7D9),
+        color: Color(0XFF2F3A3E),
         borderRadius: 17,
         height: 50,
         width: 50,
@@ -26,10 +27,17 @@ class ButtonVisualizeColors extends StatelessWidget {
         spread: spread,
         emboss:
             Provider.of<Data>(context, listen: false).visualizeButtonIsPushed,
-        child: Icon(
-          GreekFixIcons.visualizeicon,
-          color: Colors.blue.withOpacity(opacity),
-          size: 37,
+        child: ShaderMask(
+          shaderCallback: (bounds) => RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.3,
+                  colors: [Color(0XFF00F0FF), Color(0XFF00C2FF)])
+              .createShader(bounds),
+          child: Icon(
+            GreekFixIcons.visualizeicon,
+            color: Colors.white.withOpacity(opacity),
+            size: kIconSize,
+          ),
         ),
       ),
     );
@@ -37,22 +45,25 @@ class ButtonVisualizeColors extends StatelessWidget {
 }
 
 class ButtonPaste extends StatelessWidget {
-  final AnimationController animationController;
-  ButtonPaste(this.animationController);
+  final AnimationController animationControllerSpread;
+  final AnimationController animationControllerOpacity;
+  ButtonPaste(this.animationControllerSpread, this.animationControllerOpacity);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Provider.of<Data>(context, listen: false).clipboardPasteText();
-        if (animationController.isCompleted) {
-          animationController.reverse();
+        if (animationControllerSpread.isCompleted) {
+          animationControllerSpread.reverse();
+          animationControllerOpacity.reverse();
         } else {
-          animationController.forward();
+          animationControllerSpread.forward();
+          animationControllerOpacity.forward();
         }
       },
       child: ClayContainer(
-        color: Color(0XFFD4D7D9),
+        color: Color(0XFF2F3A3E),
         //surfaceColor: Colors.orangeAccent,
         borderRadius: 17,
         height: 50,
@@ -60,10 +71,16 @@ class ButtonPaste extends StatelessWidget {
         depth: 35,
         spread: 3,
         emboss: Provider.of<Data>(context, listen: false).pasteButtonIsPushed,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Image.asset(
-            'assets/Images/${Provider.of<Data>(context, listen: false).pasteIconStatus}.png',
+        child: ShaderMask(
+          shaderCallback: (bounds) => LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: <Color>[Color(0XFF00F0FF), Color(0XFF00C2FF)])
+              .createShader(bounds),
+          child: Icon(
+            GreekFixIcons.pasteicon,
+            color: Colors.white.withOpacity(1.0),
+            size: kIconSize,
           ),
         ),
       ),
@@ -72,6 +89,10 @@ class ButtonPaste extends StatelessWidget {
 }
 
 class ButtonDelete extends StatelessWidget {
+  final double spread;
+  final double opacity;
+  ButtonDelete(this.spread, this.opacity);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -79,17 +100,23 @@ class ButtonDelete extends StatelessWidget {
         Provider.of<Data>(context, listen: false).clipboardDeleteText();
       },
       child: ClayContainer(
-        color: Color(0XFFD4D7D9),
+        color: Color(0XFF2F3A3E),
         borderRadius: 17,
         height: 50,
         width: 50,
         depth: 35,
-        spread: 3,
+        spread: spread,
         emboss: Provider.of<Data>(context, listen: false).deleteButtonIsPushed,
-        child: Padding(
-          padding: const EdgeInsets.all(1.0),
-          child: Image.asset(
-            'assets/Images/${Provider.of<Data>(context, listen: false).deleteIconStatus}.png',
+        child: ShaderMask(
+          shaderCallback: (bounds) => RadialGradient(
+                  center: Alignment.centerRight,
+                  radius: 0.9,
+                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
+              .createShader(bounds),
+          child: Icon(
+            GreekFixIcons.deleteicon,
+            color: Colors.white.withOpacity(opacity),
+            size: kIconSize,
           ),
         ),
       ),
@@ -105,17 +132,23 @@ class ButtonFixText extends StatelessWidget {
         Provider.of<Data>(context, listen: false).fixButton();
       },
       child: ClayContainer(
-        color: Color(0XFFD4D7D9),
+        color: Color(0XFF2F3A3E),
         borderRadius: 17,
         height: 50,
         width: 50,
         depth: 35,
         spread: 3,
         emboss: Provider.of<Data>(context, listen: false).fixButtonIsPushed,
-        child: Padding(
-          padding: const EdgeInsets.all(7.0),
-          child: Image.asset(
-            'assets/Images/${Provider.of<Data>(context, listen: false).fixIconStatus}.png',
+        child: ShaderMask(
+          shaderCallback: (bounds) => RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.3,
+                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
+              .createShader(bounds),
+          child: Icon(
+            GreekFixIcons.fixicon,
+            color: Colors.white.withOpacity(1.0),
+            size: kIconSize,
           ),
         ),
       ),
@@ -135,7 +168,7 @@ class ButtonSwitchCase extends StatelessWidget {
         Provider.of<Data>(context, listen: false).switchCaseButton();
       },
       child: ClayContainer(
-        color: Color(0XFFD4D7D9),
+        color: Color(0XFF2F3A3E),
         borderRadius: 17,
         height: 50,
         width: 50,
@@ -143,10 +176,16 @@ class ButtonSwitchCase extends StatelessWidget {
         spread: 3,
         emboss:
             Provider.of<Data>(context, listen: false).switchCaseButtonIsPushed,
-        child: Padding(
-          padding: const EdgeInsets.all(9.0),
-          child: Image.asset(
-            'assets/Images/${Provider.of<Data>(context, listen: false).switchCaseIconStatus}.png',
+        child: ShaderMask(
+          shaderCallback: (bounds) => RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.3,
+                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
+              .createShader(bounds),
+          child: Icon(
+            GreekFixIcons.caseicon,
+            color: Colors.white.withOpacity(1.0),
+            size: kIconSize,
           ),
         ),
       ),
@@ -174,17 +213,23 @@ class ButtonCopy extends StatelessWidget {
         );
       },
       child: ClayContainer(
-        color: Color(0XFFD4D7D9),
+        color: Color(0XFF2F3A3E),
         borderRadius: 17,
         height: 50,
         width: 50,
         depth: 35,
         spread: 3,
         emboss: Provider.of<Data>(context, listen: false).copyButtonIsPushed,
-        child: Padding(
-          padding: const EdgeInsets.all(11.0),
-          child: Image.asset(
-            'assets/Images/${Provider.of<Data>(context, listen: false).copyIconStatus}.png',
+        child: ShaderMask(
+          shaderCallback: (bounds) => RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.3,
+                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
+              .createShader(bounds),
+          child: Icon(
+            GreekFixIcons.copyicon,
+            color: Colors.white.withOpacity(1.0),
+            size: kIconSize,
           ),
         ),
       ),
@@ -200,7 +245,7 @@ class ButtonTranslate extends StatelessWidget {
         Provider.of<Data>(context, listen: false).translateButton();
       },
       child: ClayContainer(
-        color: Color(0XFFD4D7D9),
+        color: Color(0XFF2F3A3E),
         borderRadius: 17,
         height: 50,
         width: 50,
@@ -208,10 +253,16 @@ class ButtonTranslate extends StatelessWidget {
         spread: 3,
         emboss:
             Provider.of<Data>(context, listen: false).translateButtonIsPushed,
-        child: Padding(
-          padding: const EdgeInsets.all(9.0),
-          child: Image.asset(
-            'assets/Images/${Provider.of<Data>(context, listen: false).translateIconStatus}.png',
+        child: ShaderMask(
+          shaderCallback: (bounds) => RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.3,
+                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
+              .createShader(bounds),
+          child: Icon(
+            GreekFixIcons.translateicon,
+            color: Colors.white.withOpacity(1.0),
+            size: kIconSize,
           ),
         ),
       ),
@@ -227,17 +278,23 @@ class ButtonRefresh extends StatelessWidget {
         Provider.of<Data>(context, listen: false).refreshButton();
       },
       child: ClayContainer(
-        color: Color(0XFFD4D7D9),
+        color: Color(0XFF2F3A3E),
         borderRadius: 17,
         height: 50,
         width: 50,
         depth: 35,
         spread: 3,
         emboss: Provider.of<Data>(context, listen: false).returnButtonIsPushed,
-        child: Padding(
-          padding: const EdgeInsets.all(11.0),
-          child: Image.asset(
-            'assets/Images/${Provider.of<Data>(context, listen: false).returnIconStatus}.png',
+        child: ShaderMask(
+          shaderCallback: (bounds) => RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.3,
+                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
+              .createShader(bounds),
+          child: Icon(
+            GreekFixIcons.returnicon,
+            color: Colors.white.withOpacity(1.0),
+            size: kIconSize,
           ),
         ),
       ),

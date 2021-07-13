@@ -4,8 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:greekfix/layouts/inputLayout.dart';
 import 'package:greekfix/layouts/colorLayout.dart';
 import 'package:greekfix/utils/buttons.dart';
-import 'package:greekfix/logic/changeNotifier.dart';
-import 'package:provider/provider.dart';
+// import 'package:greekfix/logic/changeNotifier.dart';
+// import 'package:provider/provider.dart';
 
 class FirstScreen extends StatefulWidget {
   const FirstScreen({
@@ -28,35 +28,37 @@ class _FirstScreenState extends State<FirstScreen>
   // }
 
   late Animation degOneTranslationAnimation;
-  late AnimationController controller;
-  late AnimationController controller2;
+  late AnimationController controllerSpread;
+  late AnimationController controllerOpacity;
 
   @override
   void initState() {
-    controller = AnimationController(
+    controllerSpread = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 3),
+      duration: Duration(milliseconds: 2500),
+      lowerBound: 0.7,
       upperBound: 4.0,
     );
 
-    controller2 = AnimationController(
+    controllerOpacity = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 3),
+      duration: Duration(milliseconds: 2500),
+      // lowerBound: 0.07,
       upperBound: 1.0,
     );
 
-    controller.forward();
-    controller2.forward();
+    // controllerSpread.forward();
+    // controllerOpacity.forward();
 
     degOneTranslationAnimation =
-        Tween(begin: 0.0, end: 1.0).animate(controller);
+        Tween(begin: 0.0, end: 1.0).animate(controllerSpread);
     super.initState();
 
-    controller.addListener(() {
+    controllerSpread.addListener(() {
       setState(() {});
     });
 
-    controller2.addListener(() {
+    controllerOpacity.addListener(() {
       setState(() {});
     });
   }
@@ -74,8 +76,8 @@ class _FirstScreenState extends State<FirstScreen>
                   orientation: widget.orientation,
                   degAnimation: degOneTranslationAnimation,
                   // getRadiansFromDegree: getRadiansFromDegree,
-                  animation: controller,
-                  animation2: controller2),
+                  animationSpread: controllerSpread,
+                  animationOpacity: controllerOpacity),
             ),
           );
         else {
@@ -86,8 +88,8 @@ class _FirstScreenState extends State<FirstScreen>
                 orientation: widget.orientation,
                 degAnimation: degOneTranslationAnimation,
                 // getRadiansFromDegree: getRadiansFromDegree,
-                animation2: controller2,
-                animation: controller),
+                animation2: controllerOpacity,
+                animation: controllerSpread),
           );
         }
       },
@@ -123,12 +125,12 @@ List<Widget> layoutFirstScreenPortrait(
               height: 10,
               width: 20,
             ),
-            ButtonPaste(animation),
+            ButtonPaste(animation, animation2),
             SizedBox(
               height: 10,
               width: 20,
             ),
-            ButtonDelete(),
+            ButtonDelete(animation.value, animation2.value),
           ],
         ),
       ),
@@ -162,8 +164,8 @@ List<Widget> layoutFirstScreenLandscape(
     orientation,
     degAnimation,
     getRadiansFromDegree,
-    animation,
-    animation2}) {
+    animationSpread,
+    animationOpacity}) {
   return [
     //SizedBox(width: 10),
     SizedBox(width: 17),
@@ -176,15 +178,15 @@ List<Widget> layoutFirstScreenLandscape(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ButtonPaste(animation),
+          ButtonDelete(animationSpread.value, animationOpacity.value),
           SizedBox(
             height: 40,
           ),
-          ButtonVisualizeColors(animation.value, animation2.value),
+          ButtonPaste(animationSpread, animationOpacity),
           SizedBox(
             height: 40,
           ),
-          ButtonDelete(),
+          ButtonVisualizeColors(animationSpread.value, animationOpacity.value),
         ],
       ),
     ),

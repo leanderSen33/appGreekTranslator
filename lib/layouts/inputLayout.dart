@@ -15,7 +15,7 @@ class InputLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClayContainer(
       //parentColor: Colors.lightGreen,
-      color: Color(0XFFD4D7D9),
+      color: Color(0XFF2F3A3E), //0XFF2F3A3E 0XFFD4D7D9
       width: boxSideConfig.boxSideWidthLogic(orientation, boxSide),
       height: boxSideConfig.boxSideHeightLogic(orientation, boxSide),
       borderRadius: 30,

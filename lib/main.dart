@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                     primaryColor: kColorWhite,
                     accentColor: kDarkBlue,
-                    scaffoldBackgroundColor:
-                        Color(0XFFD4D7D9), // ==> body color for the scaffold
+                    scaffoldBackgroundColor: Color(
+                        0XFF2F3A3E), // ==> body color for the scaffold (old: 0XFFD4D7D9)
                     fontFamily: "Montserrat"),
               );
             },
