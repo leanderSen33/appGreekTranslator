@@ -19,7 +19,6 @@ class TextFieldOutput extends StatelessWidget {
       decoration: InputDecoration(
         filled: false,
         fillColor: const Color(0XFFD4D7D9),
-        hintStyle: kHintStyleFields,
         border: kTextFieldBorder,
       ),
     );

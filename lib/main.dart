@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'utils/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:greekfix/logic/changeNotifier.dart';
-import 'package:greekfix/screens/landingScreen.dart';
+import 'package:greekfix/logic/change_notifier.dart';
+import 'package:greekfix/screens/landing_screen.dart';
 import 'package:greekfix/utils/size_config.dart';
 
-void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  return runApp(MyApp());
-}
+void main() => runApp(MyApp());
+// WidgetsFlutterBinding.ensureInitialized();
 
 class MyApp extends StatelessWidget {
   final double screenWidth = window.physicalSize
@@ -21,25 +19,16 @@ class MyApp extends StatelessWidget {
       create: (context) {
         return Data();
       },
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return OrientationBuilder(
-            builder: (context, orientation) {
-              SizeConfig().init(constraints, orientation);
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                home: LandingScreen(),
-                title: 'GreekFix',
-                theme: ThemeData(
-                    primaryColor: kColorWhite,
-                    accentColor: kDarkBlue,
-                    scaffoldBackgroundColor: Color(
-                        0XFF2F3A3E), // ==> body color for the scaffold (old: 0XFFD4D7D9)
-                    fontFamily: "Montserrat"),
-              );
-            },
-          );
-        },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: LandingScreen(),
+        title: 'GreekFix',
+        theme: ThemeData(
+            primaryColor: kColorWhite,
+            accentColor: kDarkBlue,
+            scaffoldBackgroundColor: Color(
+                0XFF2F3A3E), // ==> body color for the scaffold (old: 0XFFD4D7D9)
+            fontFamily: "Montserrat"),
       ),
     );
   }

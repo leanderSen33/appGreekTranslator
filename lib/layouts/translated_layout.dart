@@ -1,18 +1,17 @@
 import 'package:clay_containers/clay_containers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:greekfix/utils/textFieldOutput.dart';
+import 'package:greekfix/logic/change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:greekfix/logic/changeNotifier.dart';
-import 'package:greekfix/utils/boxSideConfig.dart';
+import 'package:greekfix/utils/box_side_config.dart';
 
-class OutputLayout extends StatelessWidget {
+class TranslatedLayout extends StatelessWidget {
   final double boxSide;
 
   final Orientation orientation;
-  OutputLayout(this.boxSide, this.orientation);
+  TranslatedLayout(this.boxSide, this.orientation);
 
   final BoxSideConfig boxSideConfig = BoxSideConfig();
-
   @override
   Widget build(BuildContext context) {
     return ClayContainer(
@@ -24,9 +23,14 @@ class OutputLayout extends StatelessWidget {
       spread: 5,
       emboss: false,
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: TextFieldOutput(
-            Provider.of<Data>(context, listen: false).controllerText2),
+        padding: const EdgeInsets.all(23.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Text(
+            Provider.of<Data>(context).showTranslatedText,
+            style: TextStyle(color: Colors.white, fontSize: 17),
+          ),
+        ),
       ),
     );
   }

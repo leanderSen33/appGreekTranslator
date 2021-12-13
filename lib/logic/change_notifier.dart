@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:greekfix/logic/brainCorrector.dart';
+import 'package:greekfix/logic/brain_corrector.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/foundation.dart';
 import 'package:translator/translator.dart';
+import 'package:greekfix/utils/constants.dart';
 
 class Data with ChangeNotifier {
   GoogleTranslator googleTranslateAPI = GoogleTranslator();
@@ -16,20 +17,26 @@ class Data with ChangeNotifier {
 
   bool getStartedButtonIsPushed = false;
 
+  bool keptAlive = true;
+
   bool pasteButtonIsPushed = false;
-  String pasteIconStatus = 'pasteIcon';
+  List<Color> pasteIconStatus = kGradientColorList;
 
   bool visualizeButtonIsPushed = false;
-  String visualizeIconStatus = 'eyeOff';
+  List<Color> visualizeIconStatus = kGradientColorList;
+  bool visualizeButtonIsDisabled = true;
 
   bool deleteButtonIsPushed = false;
   String deleteIconStatus = 'deleteOff';
+  bool deleteButtonIsDisabled = true;
 
   bool switchCaseButtonIsPushed = false;
-  String switchCaseIconStatus = 'caseOff';
+  List<Color> switchCaseIconStatus = kGradientColorList;
+  bool switchCaseButtonIsDisabled = true;
 
   bool fixButtonIsPushed = false;
-  String fixIconStatus = 'fixOff';
+  List<Color> fixIconStatus = kGradientColorList;
+  bool fixButtonIsDisabled = true;
 
   bool copyButtonIsPushed = false;
   String copyIconStatus = 'copyOff';
@@ -41,6 +48,7 @@ class Data with ChangeNotifier {
   String returnIconStatus = 'returnOff';
 
   var brainCorrector = BrainWordCorrector();
+
   final PageController controllerPage = PageController(initialPage: 0);
 
   // pasted text
@@ -52,32 +60,30 @@ class Data with ChangeNotifier {
   void clipboardPasteText() async {
     final value = await FlutterClipboard.paste();
     controllerText1.text = value;
-    pasteButtonIsPushed = !pasteButtonIsPushed;
-    pasteButtonIsPushed
-        ? pasteIconStatus = 'pasteOff'
-        : pasteIconStatus = 'pasteIcon';
+
+    pasteButtonIsPushed = true;
+
+    pasteIconStatus = kGradientGreyList;
+    visualizeIconStatus = kGradientColorList;
+
+    visualizeButtonIsDisabled = false;
+    deleteButtonIsDisabled = false;
 
     notifyListeners();
-  }
-
-  void deleteButtonDynamic(
-      String imageNameOn, String imageNameOff, bool buttonStatus) {
-    deleteButtonIsPushed = !deleteButtonIsPushed;
-    deleteButtonIsPushed
-        ? deleteIconStatus = imageNameOn
-        : deleteIconStatus = imageNameOff;
   }
 
   void clipboardDeleteText() {
     controllerText1.clear();
 
-    deleteButtonDynamic('deleteIcon', 'deleteOff', deleteButtonIsPushed);
+    fixButtonIsDisabled = true;
+    switchCaseButtonIsDisabled = true;
+
     pasteButtonIsPushed = false;
-    pasteIconStatus = 'pasteOff';
+    pasteIconStatus = kGradientGreyList;
 
     if (visualizeButtonIsPushed == true) {
       visualizeButtonIsPushed = false;
-      visualizeIconStatus = 'eyeOff';
+      visualizeIconStatus = kGradientGreyList;
     }
 
     if (showColoredText.isNotEmpty) {
@@ -85,7 +91,7 @@ class Data with ChangeNotifier {
       showColoredText.clear();
     }
 
-    Duration oneSecond = Duration(seconds: 1);
+    Duration oneSecond = Duration(milliseconds: 400);
     Future.delayed(oneSecond, () {
       deleteButtonIsPushed = false;
       deleteIconStatus = 'deleteOff';
@@ -96,10 +102,15 @@ class Data with ChangeNotifier {
   }
 
   void visualizeButton() {
+    fixIconStatus = kGradientColorList;
+    switchCaseIconStatus = kGradientColorList;
+    visualizeButtonIsDisabled = true;
+    fixButtonIsDisabled = false;
+    switchCaseButtonIsDisabled = false;
     visualizeButtonIsPushed = !visualizeButtonIsPushed;
     visualizeButtonIsPushed
-        ? visualizeIconStatus = 'eyeIcon'
-        : visualizeIconStatus = 'eyeOff';
+        ? visualizeIconStatus = kGradientGreyList
+        : visualizeIconStatus = kGradientColorList;
     smsCorrected = brainCorrector.wordCorrector(controllerText1.text);
     showColoredText = brainCorrector.finalList;
     notifyListeners();
@@ -108,8 +119,8 @@ class Data with ChangeNotifier {
   void switchCaseButton() {
     switchCaseButtonIsPushed = !switchCaseButtonIsPushed;
     switchCaseButtonIsPushed
-        ? switchCaseIconStatus = 'caseIcon'
-        : switchCaseIconStatus = 'caseOff';
+        ? switchCaseIconStatus = kGradientGreyList
+        : switchCaseIconStatus = kGradientColorList;
     switchText = !switchText;
     switchText ? changeLetterCase(switchText) : changeLetterCase(switchText);
     notifyListeners();
@@ -123,7 +134,9 @@ class Data with ChangeNotifier {
 
   void fixButton() async {
     fixButtonIsPushed = !fixButtonIsPushed;
-    fixButtonIsPushed ? fixIconStatus = 'fixIcon' : fixIconStatus = 'fixOff';
+    fixButtonIsPushed
+        ? fixIconStatus = kGradientGreyList
+        : fixIconStatus = kGradientColorList;
     controllerText2.text = smsCorrected;
     print('FIXED MESSAGE: ${controllerText2.text}');
     input = smsCorrected;
@@ -178,21 +191,25 @@ class Data with ChangeNotifier {
   }
 
   void refreshButton() {
+    fixButtonIsDisabled = true;
+    switchCaseButtonIsDisabled = true;
+    deleteButtonIsDisabled = true;
+    visualizeButtonIsDisabled = true;
     returnButtonIsPushed = !returnButtonIsPushed;
     returnButtonIsPushed
         ? returnIconStatus = 'returnIcon'
         : returnIconStatus = 'returnOff';
 
     pasteButtonIsPushed = false;
-    pasteIconStatus = 'pasteIcon';
+    pasteIconStatus = kGradientColorList;
     visualizeButtonIsPushed = false;
-    visualizeIconStatus = 'eyeOff';
+    visualizeIconStatus = kGradientColorList;
     deleteButtonIsPushed = false;
     deleteIconStatus = 'deleteOff';
     switchCaseButtonIsPushed = false;
-    switchCaseIconStatus = 'caseOff';
+    switchCaseIconStatus = kGradientColorList;
     fixButtonIsPushed = false;
-    fixIconStatus = 'fixOff';
+    fixIconStatus = kGradientColorList;
     copyButtonIsPushed = false;
     copyIconStatus = 'copyOff';
     translateButtonIsPushed = false;

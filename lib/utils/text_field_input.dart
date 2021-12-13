@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greekfix/utils/constants.dart';
-import 'package:greekfix/logic/changeNotifier.dart';
+import 'package:greekfix/logic/change_notifier.dart';
 import 'package:provider/provider.dart';
 
 class TextFieldInput extends StatelessWidget {
@@ -17,10 +17,11 @@ class TextFieldInput extends StatelessWidget {
       minLines: 17,
       maxLines: 17,
       decoration: InputDecoration(
+        suffixIcon: Icon(Icons.delete_forever),
         filled: false,
         fillColor: const Color(0XFFD4D7D9),
         //hintText: 'Press the paste button',
-        hintStyle: kHintStyleFields,
+        //hintStyle: kHintStyleFields,
         border: kTextFieldBorder,
       ),
     );

@@ -2,47 +2,11 @@ import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:greekfix/logic/changeNotifier.dart';
-import 'package:greekfix/utils/greekFixIcons.dart';
+import 'package:greekfix/logic/change_notifier.dart';
+import 'package:greekfix/utils/greek_fix_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:greekfix/utils/constants.dart';
-
-class ButtonVisualizeColors extends StatelessWidget {
-  final double spread;
-  final double opacity;
-  ButtonVisualizeColors(this.spread, this.opacity);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Provider.of<Data>(context, listen: false).visualizeButton();
-      },
-      child: ClayContainer(
-        color: Color(0XFF2F3A3E),
-        borderRadius: 17,
-        height: 50,
-        width: 50,
-        depth: 35,
-        spread: spread,
-        emboss:
-            Provider.of<Data>(context, listen: false).visualizeButtonIsPushed,
-        child: ShaderMask(
-          shaderCallback: (bounds) => RadialGradient(
-                  center: Alignment.center,
-                  radius: 0.3,
-                  colors: [Color(0XFF00F0FF), Color(0XFF00C2FF)])
-              .createShader(bounds),
-          child: Icon(
-            GreekFixIcons.visualizeicon,
-            color: Colors.white.withOpacity(opacity),
-            size: kIconSize,
-          ),
-        ),
-      ),
-    );
-  }
-}
+import 'package:greekfix/utils/button_blueprint.dart';
 
 class ButtonPaste extends StatelessWidget {
   final AnimationController animationControllerSpread;
@@ -51,37 +15,55 @@ class ButtonPaste extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Provider.of<Data>(context, listen: false).clipboardPasteText();
-        if (animationControllerSpread.isCompleted) {
-          animationControllerSpread.reverse();
-          animationControllerOpacity.reverse();
-        } else {
+    return IgnorePointer(
+      ignoring: Provider.of<Data>(context, listen: false).pasteButtonIsPushed,
+      child: GestureDetector(
+        onTap: () {
+          Provider.of<Data>(context, listen: false).clipboardPasteText();
           animationControllerSpread.forward();
           animationControllerOpacity.forward();
-        }
-      },
-      child: ClayContainer(
-        color: Color(0XFF2F3A3E),
-        //surfaceColor: Colors.orangeAccent,
-        borderRadius: 17,
-        height: 50,
-        width: 50,
-        depth: 35,
-        spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).pasteButtonIsPushed,
-        child: ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: <Color>[Color(0XFF00F0FF), Color(0XFF00C2FF)])
-              .createShader(bounds),
-          child: Icon(
-            GreekFixIcons.pasteicon,
-            color: Colors.white.withOpacity(1.0),
-            size: kIconSize,
-          ),
+        },
+        child: Buttons(
+          iconColor: Provider.of<Data>(context, listen: false).pasteIconStatus,
+          spread: 3.0,
+          opacity: 1.0,
+          isPushed:
+              Provider.of<Data>(context, listen: false).pasteButtonIsPushed,
+          icon: GreekFixIcons.pasteicon,
+        ),
+      ),
+    );
+  }
+}
+
+class ButtonVisualizeColors extends StatelessWidget {
+  final double spread;
+  final double opacity;
+  final AnimationController animationControllerSpread;
+  final AnimationController animationControllerOpacity;
+  ButtonVisualizeColors(this.spread, this.opacity,
+      this.animationControllerOpacity, this.animationControllerSpread);
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      ignoring:
+          Provider.of<Data>(context, listen: false).visualizeButtonIsDisabled,
+      child: GestureDetector(
+        onTap: () {
+          Provider.of<Data>(context, listen: false).visualizeButton();
+
+          animationControllerSpread.forward();
+          animationControllerOpacity.forward();
+        },
+        child: Buttons(
+          iconColor:
+              Provider.of<Data>(context, listen: false).visualizeIconStatus,
+          spread: spread,
+          opacity: opacity,
+          isPushed:
+              Provider.of<Data>(context, listen: false).visualizeButtonIsPushed,
+          icon: GreekFixIcons.visualizeicon,
         ),
       ),
     );
@@ -89,35 +71,59 @@ class ButtonPaste extends StatelessWidget {
 }
 
 class ButtonDelete extends StatelessWidget {
+  final AnimationController animationControllerSpread;
+  final AnimationController animationControllerOpacity;
+  final AnimationController animationControllerLowerSpread;
+  final AnimationController animationControllerLowerOpacity;
+
   final double spread;
   final double opacity;
-  ButtonDelete(this.spread, this.opacity);
+  ButtonDelete(
+      this.spread,
+      this.opacity,
+      this.animationControllerSpread,
+      this.animationControllerOpacity,
+      this.animationControllerLowerOpacity,
+      this.animationControllerLowerSpread);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Provider.of<Data>(context, listen: false).clipboardDeleteText();
-      },
-      child: ClayContainer(
-        color: Color(0XFF2F3A3E),
-        borderRadius: 17,
-        height: 50,
-        width: 50,
-        depth: 35,
-        spread: spread,
-        emboss: Provider.of<Data>(context, listen: false).deleteButtonIsPushed,
-        child: ShaderMask(
-          shaderCallback: (bounds) => RadialGradient(
-                  center: Alignment.centerRight,
-                  radius: 0.9,
-                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
-              .createShader(bounds),
-          child: Icon(
-            GreekFixIcons.deleteicon,
-            color: Colors.white.withOpacity(opacity),
-            size: kIconSize,
-          ),
+    return IgnorePointer(
+      ignoring:
+          Provider.of<Data>(context, listen: false).deleteButtonIsDisabled,
+      child: GestureDetector(
+        onTap: () {
+          Provider.of<Data>(context, listen: false).deleteButtonIsDisabled =
+              true;
+          Provider.of<Data>(context, listen: false).visualizeButtonIsDisabled =
+              true;
+          Provider.of<Data>(context, listen: false).clipboardDeleteText();
+
+          Provider.of<Data>(context, listen: false).pasteIconStatus =
+              kGradientColorList;
+
+          animationControllerSpread.reverse();
+          animationControllerOpacity.reverse();
+          animationControllerLowerSpread.reverse();
+          animationControllerLowerOpacity.reverse();
+
+          if (Provider.of<Data>(context, listen: false).fixButtonIsPushed) {
+            Provider.of<Data>(context, listen: false).fixButtonIsPushed = false;
+          }
+
+          if (Provider.of<Data>(context, listen: false)
+              .switchCaseButtonIsPushed) {
+            Provider.of<Data>(context, listen: false).switchCaseButtonIsPushed =
+                false;
+          }
+        },
+        child: Buttons(
+          iconColor: kGradientColorList,
+          spread: spread,
+          opacity: opacity,
+          isPushed:
+              Provider.of<Data>(context, listen: false).deleteButtonIsPushed,
+          icon: GreekFixIcons.deleteicon,
         ),
       ),
     );
@@ -125,31 +131,25 @@ class ButtonDelete extends StatelessWidget {
 }
 
 class ButtonFixText extends StatelessWidget {
+  final double spread;
+  final double opacity;
+  ButtonFixText(this.spread, this.opacity);
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Provider.of<Data>(context, listen: false).fixButton();
-      },
-      child: ClayContainer(
-        color: Color(0XFF2F3A3E),
-        borderRadius: 17,
-        height: 50,
-        width: 50,
-        depth: 35,
-        spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).fixButtonIsPushed,
-        child: ShaderMask(
-          shaderCallback: (bounds) => RadialGradient(
-                  center: Alignment.center,
-                  radius: 0.3,
-                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
-              .createShader(bounds),
-          child: Icon(
-            GreekFixIcons.fixicon,
-            color: Colors.white.withOpacity(1.0),
-            size: kIconSize,
-          ),
+    return IgnorePointer(
+      ignoring: Provider.of<Data>(context, listen: false).fixButtonIsDisabled,
+      child: GestureDetector(
+        onTap: () {
+          Provider.of<Data>(context, listen: false).fixButton();
+          Provider.of<Data>(context, listen: false).fixButtonIsDisabled = true;
+        },
+        child: Buttons(
+          iconColor: Provider.of<Data>(context, listen: false).fixIconStatus,
+          spread: spread,
+          opacity: opacity,
+          isPushed: Provider.of<Data>(context, listen: false).fixButtonIsPushed,
+          icon: GreekFixIcons.fixicon,
         ),
       ),
     );
@@ -157,36 +157,27 @@ class ButtonFixText extends StatelessWidget {
 }
 
 class ButtonSwitchCase extends StatelessWidget {
-  //use this to make the button contour disappear.
-  // final int depth;
-  // ButtonSwitchCase(this.depth);
+  final double spread;
+  final double opacity;
+  ButtonSwitchCase(this.spread, this.opacity);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Provider.of<Data>(context, listen: false).switchCaseButton();
-      },
-      child: ClayContainer(
-        color: Color(0XFF2F3A3E),
-        borderRadius: 17,
-        height: 50,
-        width: 50,
-        depth: 35,
-        spread: 3,
-        emboss:
-            Provider.of<Data>(context, listen: false).switchCaseButtonIsPushed,
-        child: ShaderMask(
-          shaderCallback: (bounds) => RadialGradient(
-                  center: Alignment.center,
-                  radius: 0.3,
-                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
-              .createShader(bounds),
-          child: Icon(
-            GreekFixIcons.caseicon,
-            color: Colors.white.withOpacity(1.0),
-            size: kIconSize,
-          ),
+    return IgnorePointer(
+      ignoring:
+          Provider.of<Data>(context, listen: false).switchCaseButtonIsDisabled,
+      child: GestureDetector(
+        onTap: () {
+          Provider.of<Data>(context, listen: false).switchCaseButton();
+        },
+        child: Buttons(
+          iconColor:
+              Provider.of<Data>(context, listen: false).switchCaseIconStatus,
+          spread: spread,
+          opacity: opacity,
+          isPushed: Provider.of<Data>(context, listen: false)
+              .switchCaseButtonIsPushed,
+          icon: GreekFixIcons.caseicon,
         ),
       ),
     );
@@ -212,26 +203,12 @@ class ButtonCopy extends StatelessWidget {
           ),
         );
       },
-      child: ClayContainer(
-        color: Color(0XFF2F3A3E),
-        borderRadius: 17,
-        height: 50,
-        width: 50,
-        depth: 35,
+      child: Buttons(
+        iconColor: kGradientColorList,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).copyButtonIsPushed,
-        child: ShaderMask(
-          shaderCallback: (bounds) => RadialGradient(
-                  center: Alignment.center,
-                  radius: 0.3,
-                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
-              .createShader(bounds),
-          child: Icon(
-            GreekFixIcons.copyicon,
-            color: Colors.white.withOpacity(1.0),
-            size: kIconSize,
-          ),
-        ),
+        opacity: 1.0,
+        isPushed: Provider.of<Data>(context, listen: false).copyButtonIsPushed,
+        icon: GreekFixIcons.copyicon,
       ),
     );
   }
@@ -244,27 +221,13 @@ class ButtonTranslate extends StatelessWidget {
       onTap: () {
         Provider.of<Data>(context, listen: false).translateButton();
       },
-      child: ClayContainer(
-        color: Color(0XFF2F3A3E),
-        borderRadius: 17,
-        height: 50,
-        width: 50,
-        depth: 35,
+      child: Buttons(
+        iconColor: kGradientColorList,
         spread: 3,
-        emboss:
+        opacity: 1.0,
+        isPushed:
             Provider.of<Data>(context, listen: false).translateButtonIsPushed,
-        child: ShaderMask(
-          shaderCallback: (bounds) => RadialGradient(
-                  center: Alignment.center,
-                  radius: 0.3,
-                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
-              .createShader(bounds),
-          child: Icon(
-            GreekFixIcons.translateicon,
-            color: Colors.white.withOpacity(1.0),
-            size: kIconSize,
-          ),
-        ),
+        icon: GreekFixIcons.translateicon,
       ),
     );
   }
@@ -277,26 +240,13 @@ class ButtonRefresh extends StatelessWidget {
       onTap: () {
         Provider.of<Data>(context, listen: false).refreshButton();
       },
-      child: ClayContainer(
-        color: Color(0XFF2F3A3E),
-        borderRadius: 17,
-        height: 50,
-        width: 50,
-        depth: 35,
+      child: Buttons(
+        iconColor: kGradientColorList,
         spread: 3,
-        emboss: Provider.of<Data>(context, listen: false).returnButtonIsPushed,
-        child: ShaderMask(
-          shaderCallback: (bounds) => RadialGradient(
-                  center: Alignment.center,
-                  radius: 0.3,
-                  colors: [Color(0XFF00C2FF), Color(0XFF00F0FF)])
-              .createShader(bounds),
-          child: Icon(
-            GreekFixIcons.returnicon,
-            color: Colors.white.withOpacity(1.0),
-            size: kIconSize,
-          ),
-        ),
+        opacity: 1.0,
+        isPushed:
+            Provider.of<Data>(context, listen: false).returnButtonIsPushed,
+        icon: GreekFixIcons.returnicon,
       ),
     );
   }

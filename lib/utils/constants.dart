@@ -14,16 +14,19 @@ const BoxDecoration kFieldDecoration2 = BoxDecoration(
   ),
 );
 
-const kTextStyleFields = TextStyle(fontSize: 17.0, color: Colors.black45);
+const Color kButtonColor = Color(0XFF2F3A3E);
 
-const double kIconSize = 37;
+const List<Color> kGradientColorList = [Color(0XFF00F0FF), Color(0XFF00C2FF)];
 
-const kHintStyleFields = TextStyle(color: Colors.grey, fontSize: 14.0);
+const List<Color> kGradientGreyList = [Colors.black38, Colors.black26];
+
+const kTextStyleFields = TextStyle(fontSize: 17.0, color: Colors.white70);
+
+const double kIconSize = 30;
+
+//const kHintStyleFields = TextStyle(color: Colors.grey, fontSize: 14.0);
 
 const kTextFieldBorder = OutlineInputBorder(
-  borderRadius: BorderRadius.all(
-    Radius.circular(10),
-  ),
   borderSide: BorderSide.none,
 );
 

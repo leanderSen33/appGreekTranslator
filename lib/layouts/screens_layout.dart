@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:greekfix/screens/firstScreen.dart';
-import 'package:greekfix/screens/secondScreen.dart';
-import 'package:greekfix/logic/changeNotifier.dart';
+import 'package:greekfix/screens/first_screen.dart';
+import 'package:greekfix/screens/second_screen.dart';
+import 'package:greekfix/logic/change_notifier.dart';
 import 'package:provider/provider.dart';
 
 class ScreensLayout extends StatelessWidget {
@@ -33,8 +33,14 @@ class ScreensLayout extends StatelessWidget {
           scrollDirection: scrollDirection(),
           pageSnapping: Provider.of<Data>(context).pageSnappingChange,
           children: [
-            FirstScreen(orientation: orientation, boxSide: boxSide),
-            SecondScreen(orientation: orientation, boxSide: boxSide),
+            FirstScreen(
+                key: PageStorageKey('hola'),
+                orientation: orientation,
+                boxSide: boxSide),
+            SecondScreen(
+                key: PageStorageKey('holo'),
+                orientation: orientation,
+                boxSide: boxSide),
           ],
         ),
       ),

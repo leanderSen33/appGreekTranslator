@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:greekfix/layouts/inputLayout.dart';
-import 'package:greekfix/layouts/colorLayout.dart';
+import 'package:greekfix/layouts/input_layout.dart';
+import 'package:greekfix/layouts/color_layout.dart';
 import 'package:greekfix/utils/buttons.dart';
-// import 'package:greekfix/logic/changeNotifier.dart';
+// import 'package:greekfix/logic/change_notifier.dart';
 // import 'package:provider/provider.dart';
 
 class FirstScreen extends StatefulWidget {
   const FirstScreen({
+    required Key key,
     required this.orientation,
     required this.boxSide,
-  });
+  }) : super(key: key);
 
   final Orientation orientation;
   final double boxSide;
@@ -22,49 +23,75 @@ class FirstScreen extends StatefulWidget {
 
 class _FirstScreenState extends State<FirstScreen>
     with TickerProviderStateMixin {
-  // double getRadiansFromDegree(double degree) {
-  //   double unitRadian = 57.295779513;
-  //   return degree / unitRadian;
-  // }
+  // Animation Controllers for the buttons of the first and second row.
+  late AnimationController controllerSpreadUpperButtons;
+  late AnimationController controllerOpacityUpperButtons;
 
-  late Animation degOneTranslationAnimation;
-  late AnimationController controllerSpread;
-  late AnimationController controllerOpacity;
+  late AnimationController controllerSpreadLowerButtons;
+  late AnimationController controllerOpacityLowerButtons;
+
+  @override
+  void dispose() {
+    controllerSpreadUpperButtons.dispose();
+    controllerOpacityUpperButtons.dispose();
+    controllerSpreadLowerButtons.dispose();
+    controllerOpacityLowerButtons.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
-    controllerSpread = AnimationController(
+    controllerSpreadUpperButtons = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 2500),
+      duration: Duration(milliseconds: 700),
       lowerBound: 0.7,
-      upperBound: 4.0,
+      upperBound: 3.0,
     );
 
-    controllerOpacity = AnimationController(
+    controllerOpacityUpperButtons = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 2500),
-      // lowerBound: 0.07,
+      duration: Duration(milliseconds: 1000),
       upperBound: 1.0,
     );
 
-    // controllerSpread.forward();
-    // controllerOpacity.forward();
+    controllerSpreadLowerButtons = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 700),
+      lowerBound: 0.7,
+      upperBound: 3.0,
+    );
 
-    degOneTranslationAnimation =
-        Tween(begin: 0.0, end: 1.0).animate(controllerSpread);
+    controllerOpacityLowerButtons = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+      upperBound: 1.0,
+    );
+
     super.initState();
 
-    controllerSpread.addListener(() {
+    controllerSpreadUpperButtons.addListener(() {
       setState(() {});
     });
 
-    controllerOpacity.addListener(() {
+    controllerOpacityUpperButtons.addListener(() {
+      setState(() {});
+    });
+
+    controllerSpreadLowerButtons.addListener(() {
+      setState(() {});
+    });
+
+    controllerOpacityLowerButtons.addListener(() {
       setState(() {});
     });
   }
 
+  // @override
+  // bool get wantKeepAlive => Provider.of<Data>(context, listen: false).keptAlive;
+
   @override
   Widget build(BuildContext context) {
+    // super.build(context);
     return Builder(
       builder: (context) {
         if (widget.orientation.index == Orientation.landscape.index)
@@ -74,10 +101,10 @@ class _FirstScreenState extends State<FirstScreen>
               children: layoutFirstScreenLandscape(
                   boxSide: widget.boxSide,
                   orientation: widget.orientation,
-                  degAnimation: degOneTranslationAnimation,
-                  // getRadiansFromDegree: getRadiansFromDegree,
-                  animationSpread: controllerSpread,
-                  animationOpacity: controllerOpacity),
+                  opacityLower: controllerOpacityLowerButtons,
+                  spreadLower: controllerSpreadLowerButtons,
+                  animationSpread: controllerSpreadUpperButtons,
+                  animationOpacity: controllerOpacityUpperButtons),
             ),
           );
         else {
@@ -86,10 +113,10 @@ class _FirstScreenState extends State<FirstScreen>
             children: layoutFirstScreenPortrait(
                 boxSide: widget.boxSide,
                 orientation: widget.orientation,
-                degAnimation: degOneTranslationAnimation,
-                // getRadiansFromDegree: getRadiansFromDegree,
-                animation2: controllerOpacity,
-                animation: controllerSpread),
+                opacityLower: controllerOpacityLowerButtons,
+                spreadLower: controllerSpreadLowerButtons,
+                animationOpacity: controllerOpacityUpperButtons,
+                animationSpread: controllerSpreadUpperButtons),
           );
         }
       },
@@ -100,16 +127,14 @@ class _FirstScreenState extends State<FirstScreen>
 List<Widget> layoutFirstScreenPortrait(
     {boxSide,
     orientation,
-    degAnimation,
-    getRadiansFromDegree,
-    animation,
-    animation2}) {
+    animationOpacity,
+    animationSpread,
+    spreadLower,
+    opacityLower}) {
   return [
+    SizedBox(height: 40),
     Expanded(
-      child: SizedBox(height: 40),
-    ),
-    Expanded(
-      flex: 6,
+      flex: 7,
       child: InputLayout(boxSide, orientation),
     ),
     Expanded(
@@ -120,23 +145,25 @@ List<Widget> layoutFirstScreenPortrait(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // IgnorePointer is the solution for the non responding buttons.
-            ButtonVisualizeColors(animation.value, animation2.value),
+            ButtonVisualizeColors(animationSpread.value, animationOpacity.value,
+                opacityLower, spreadLower),
             SizedBox(
               height: 10,
               width: 20,
             ),
-            ButtonPaste(animation, animation2),
+            ButtonPaste(animationSpread, animationOpacity),
             SizedBox(
               height: 10,
               width: 20,
             ),
-            ButtonDelete(animation.value, animation2.value),
+            ButtonDelete(animationSpread.value, animationOpacity.value,
+                animationSpread, animationOpacity, opacityLower, spreadLower),
           ],
         ),
       ),
     ),
     Expanded(
-      flex: 6,
+      flex: 7,
       child: ColorLayout(boxSide, orientation),
     ),
     Expanded(
@@ -146,11 +173,11 @@ List<Widget> layoutFirstScreenPortrait(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ButtonSwitchCase(),
+            ButtonSwitchCase(spreadLower.value, opacityLower.value),
             SizedBox(
               width: 20,
             ),
-            ButtonFixText(),
+            ButtonFixText(spreadLower.value, opacityLower.value),
           ],
         ),
       ),
@@ -162,10 +189,10 @@ List<Widget> layoutFirstScreenPortrait(
 List<Widget> layoutFirstScreenLandscape(
     {boxSide,
     orientation,
-    degAnimation,
-    getRadiansFromDegree,
     animationSpread,
-    animationOpacity}) {
+    animationOpacity,
+    spreadLower,
+    opacityLower}) {
   return [
     //SizedBox(width: 10),
     SizedBox(width: 17),
@@ -178,7 +205,8 @@ List<Widget> layoutFirstScreenLandscape(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ButtonDelete(animationSpread.value, animationOpacity.value),
+          ButtonDelete(animationSpread.value, animationOpacity.value,
+              animationSpread, animationOpacity, opacityLower, spreadLower),
           SizedBox(
             height: 40,
           ),
@@ -186,7 +214,8 @@ List<Widget> layoutFirstScreenLandscape(
           SizedBox(
             height: 40,
           ),
-          ButtonVisualizeColors(animationSpread.value, animationOpacity.value),
+          ButtonVisualizeColors(animationSpread.value, animationOpacity.value,
+              opacityLower, spreadLower),
         ],
       ),
     ),
@@ -199,11 +228,11 @@ List<Widget> layoutFirstScreenLandscape(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ButtonSwitchCase(),
+          ButtonSwitchCase(opacityLower.value, spreadLower.value),
           SizedBox(
             height: 40,
           ),
-          ButtonFixText(),
+          ButtonFixText(opacityLower.value, spreadLower.value),
         ],
       ),
     ),

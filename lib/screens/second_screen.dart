@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:greekfix/layouts/translatedLayout.dart';
-import 'package:greekfix/layouts/outputLayout.dart';
+import 'package:greekfix/layouts/translated_layout.dart';
+import 'package:greekfix/layouts/output_layout.dart';
 import 'package:greekfix/utils/buttons.dart';
 
 class SecondScreen extends StatelessWidget {
   const SecondScreen({
-    Key? key,
+    required Key key,
     required this.orientation,
     required this.boxSide,
   }) : super(key: key);

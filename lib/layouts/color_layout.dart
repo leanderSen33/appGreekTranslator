@@ -1,34 +1,32 @@
 import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:greekfix/logic/changeNotifier.dart';
+import 'package:greekfix/logic/change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:greekfix/utils/boxSideConfig.dart';
+import 'package:greekfix/utils/box_side_config.dart';
 
-class TranslatedLayout extends StatelessWidget {
+class ColorLayout extends StatelessWidget {
   final double boxSide;
-
   final Orientation orientation;
-  TranslatedLayout(this.boxSide, this.orientation);
-
+  ColorLayout(this.boxSide, this.orientation);
   final BoxSideConfig boxSideConfig = BoxSideConfig();
+//0XFFf96778
   @override
   Widget build(BuildContext context) {
-    return ClayContainer(
-      color: Color(0XFF2F3A3E),
-      width: boxSideConfig.boxSideWidthLogic(orientation, boxSide),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black54),
+      ),
+      width: double.infinity,
       height: boxSideConfig.boxSideHeightLogic(orientation, boxSide),
-      borderRadius: 30,
-      depth: 40,
-      spread: 5,
-      emboss: false,
       child: Padding(
         padding: const EdgeInsets.all(23.0),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Text(
-            Provider.of<Data>(context).showTranslatedText,
-            style: TextStyle(color: Colors.white, fontSize: 17),
+          child: RichText(
+            text: TextSpan(
+              children: Provider.of<Data>(context, listen: true).showColorText,
+            ),
           ),
         ),
       ),

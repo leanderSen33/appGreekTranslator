@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greekfix/data/latinList.dart';
-import 'package:greekfix/data/brainVars.dart';
+import 'package:greekfix/data/latin_words_list.dart';
+import 'package:greekfix/data/brain_vars.dart';
 
 class BrainWordCorrector {
   LatinList latinList = LatinList();
@@ -65,7 +65,6 @@ class BrainWordCorrector {
         var euroAbbreviation = RegExp(r'^[0-9]+E$').hasMatch(word);
         if (euroAbbreviation) {
           String endWord = word;
-
           for (var element in _greekAbbreviationsMap.keys) {
             endWord =
                 endWord.replaceFirst(element, _greekAbbreviationsMap[element]);

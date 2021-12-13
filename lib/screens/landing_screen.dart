@@ -4,8 +4,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:clay_containers/clay_containers.dart';
 import 'package:provider/provider.dart';
-import 'package:greekfix/logic/changeNotifier.dart';
-import 'package:greekfix/layouts/screensLayout.dart';
+import 'package:greekfix/logic/change_notifier.dart';
+import 'package:greekfix/layouts/screens_layout.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class LandingScreen extends StatelessWidget {

@@ -1,21 +1,22 @@
 import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/material.dart';
-import 'package:greekfix/utils/texfFieldInput.dart';
-import 'package:greekfix/utils/boxSideConfig.dart';
+import 'package:greekfix/utils/text_field_output.dart';
+import 'package:provider/provider.dart';
+import 'package:greekfix/logic/change_notifier.dart';
+import 'package:greekfix/utils/box_side_config.dart';
 
-class InputLayout extends StatelessWidget {
+class OutputLayout extends StatelessWidget {
   final double boxSide;
 
   final Orientation orientation;
-  InputLayout(this.boxSide, this.orientation);
+  OutputLayout(this.boxSide, this.orientation);
 
   final BoxSideConfig boxSideConfig = BoxSideConfig();
 
   @override
   Widget build(BuildContext context) {
     return ClayContainer(
-      //parentColor: Colors.lightGreen,
-      color: Color(0XFF2F3A3E), //0XFF2F3A3E 0XFFD4D7D9
+      color: Color(0XFF2F3A3E),
       width: boxSideConfig.boxSideWidthLogic(orientation, boxSide),
       height: boxSideConfig.boxSideHeightLogic(orientation, boxSide),
       borderRadius: 30,
@@ -24,10 +25,9 @@ class InputLayout extends StatelessWidget {
       emboss: false,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: TextFieldInput(),
+        child: TextFieldOutput(
+            Provider.of<Data>(context, listen: false).controllerText2),
       ),
     );
   }
 }
-
-// ButtonVisualizeColors()
